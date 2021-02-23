@@ -11,7 +11,9 @@ class App extends Component {
 
     this.state = {
       board: [[0,0,0,1,0,0,0],[0,0,1,1,1,0,0],[0,1,1,1,1,1,0],[1,1,1,1,1,1,1]],
-      game: 1
+      game: 1,
+      PlayerLastMove: "",
+      IALastMove: ""
     }
   }
 
@@ -26,6 +28,7 @@ class App extends Component {
             boardTmp[ligne][j] = 0
           }
           this.setState({board: boardTmp})
+          this.setState({PlayerLastMove: `Player removed ${values[1]} match(es) from line ${values[0]}`})
           if(this.GameOver(boardTmp)){
             this.state.game = 0
             alert("You lost, too bad..")
@@ -48,6 +51,14 @@ class App extends Component {
     return true
   }
 
+  newGame(){
+    const newBoard = [[0,0,0,1,0,0,0],[0,0,1,1,1,0,0],[0,1,1,1,1,1,0],[1,1,1,1,1,1,1]]
+    this.setState({game: 1})
+    this.setState({board: newBoard})
+    this.setState({PlayerLastMove: ""})
+    this.setState({IALastMove: ""})
+  }
+
   iaTurn() {
     let line = this.getRandomInt(0, 4)
     const boardTmp = this.state.board
@@ -61,6 +72,7 @@ class App extends Component {
       boardTmp[line][j] = 0
     }
     this.setState({board: boardTmp})
+    this.setState({IALastMove: `IA removed ${matches} match(es) from line ${line + 1}`})
     if(this.GameOver(boardTmp)){
       this.state.game = 0
       alert(" I lost.. snif.. but I’ll get you next time!!")
@@ -108,6 +120,8 @@ class App extends Component {
 
   render(){
     const board = this.state.board
+    const PlayerLastMove = this.state.PlayerLastMove
+    const IALastMove = this.state.IALastMove
   
     return (
       <div>
@@ -133,7 +147,9 @@ class App extends Component {
         </table>
         
         <SearchBar onSubmit={(value) => this.changeBoard(value)} />
-        
+        <button onClick={() => this.newGame()}> New Game </button>
+        <p> {PlayerLastMove} </p>
+        <p> {IALastMove} </p>
       </div>
       
     )
